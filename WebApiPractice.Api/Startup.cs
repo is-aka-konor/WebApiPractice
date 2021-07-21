@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using WebApiPractice.Persistent.Context;
+using Serilog;
 
 namespace WebApiPractice.Api
 {
@@ -42,7 +43,8 @@ namespace WebApiPractice.Api
             app.UseRouting();
 
             app.UseAuthorization();
-
+            // This will make the HTTP requests log as rich logs instead of plain text.
+            app.UseSerilogRequestLogging();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
