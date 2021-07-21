@@ -7,6 +7,11 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using WebApiPractice.Persistent.Context;
 using Serilog;
+using MediatR;
+using WebApiPractice.Api.Extensions;
+using WebApiPractice.Api.ValidationFlow.Interfaces;
+using WebApiPractice.Api.ValidationFlow;
+using System.Reflection;
 
 namespace WebApiPractice.Api
 {
@@ -22,6 +27,13 @@ namespace WebApiPractice.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add MediatR functionality
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            // register validation contract handlers
+            services.AddContractHandlers(Assembly.GetAssembly(typeof(IValidationContractHandler))!);
+            // register the pipeline
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ContractValidationPipeline<,>));
+
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlConnectionString")));
             services.AddScoped<AppDbContext>();
             services.AddControllers();
