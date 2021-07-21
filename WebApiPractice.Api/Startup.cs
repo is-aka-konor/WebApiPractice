@@ -26,6 +26,7 @@ namespace WebApiPractice.Api
             services.AddScoped<AppDbContext>();
             services.AddControllers();
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPractice.Api", Version = "v1" }));
+            services.AddSwaggerGenNewtonsoftSupport();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,7 +38,7 @@ namespace WebApiPractice.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "WebApiPractice.Api v1"));
             }
-
+            app.UseMiddleware<Middlewares.ExceptionHandlerMiddleware>();
             app.UseHttpsRedirection();
 
             app.UseRouting();
