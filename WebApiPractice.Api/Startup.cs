@@ -12,6 +12,7 @@ using WebApiPractice.Api.Extensions;
 using WebApiPractice.Api.ValidationFlow.Interfaces;
 using WebApiPractice.Api.ValidationFlow;
 using System.Reflection;
+using WebApiPractice.Api.Mapper;
 
 namespace WebApiPractice.Api
 {
@@ -36,7 +37,11 @@ namespace WebApiPractice.Api
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlConnectionString")));
             services.AddScoped<AppDbContext>();
-            services.AddControllers();
+            services.AddScoped<IObjectMapper, ObjectMapper>();
+            services.AddControllers()
+                    .AddNewtonsoftJson(
+                        options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    ); 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPractice.Api", Version = "v1" }));
             services.AddSwaggerGenNewtonsoftSupport();
         }

@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using WebApiPractice.Api.Resources.Customer;
 
 namespace WebApiPractice.Api.Controllers
 {
@@ -10,11 +11,18 @@ namespace WebApiPractice.Api.Controllers
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
+        private readonly IMediator _mediator;
+        public CustomersController(IMediator mediator)
+        {
+            this._mediator = mediator;
+        }
+
         [HttpPost]
         [Produces("application/json")]
-        public async Task<IActionResult> CreateCustomer([FromBody] CreateCustomerRequest request)
+        public async Task<IActionResult> CreateCustomer([FromBody] PostCustomerRequest request)
         {
-            throw new NotImplementedException();
+            var response = await this._mediator.Send(request).ConfigureAwait(false);
+            return Created(new Uri(HttpContext.Request.GetDisplayUrl()), response);
         }
 
         [HttpGet]
