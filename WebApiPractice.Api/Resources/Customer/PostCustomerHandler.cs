@@ -9,6 +9,7 @@ using WebApiPractice.Persistent.Context;
 using WebApiPractice.Api.Enumerations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
+using WebApiPractice.Api.Resources.Customer.Validations;
 
 namespace WebApiPractice.Api.Resources.Customer
 {
@@ -41,6 +42,7 @@ namespace WebApiPractice.Api.Resources.Customer
     /// Describes a model of incoming request to create a customer
     /// </summary>
     public class PostCustomerRequest : IRequest<PostCustomerResponse>
+        , IPostCustomerValidationContract
     {
         [JsonConverter(typeof(EnumerationConverter<CustomerStatus>))]
         public CustomerStatus Status { get; set; } = CustomerStatus.Unknown;
