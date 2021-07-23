@@ -34,7 +34,7 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
         }
         #endregion
 
-        public async Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
+        public Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
             if (!(request is IPostCustomerValidationContract contract))
             {
@@ -78,7 +78,7 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
             SharedValidationMethods.ValidateStringLength(contract.LastName, 70, nameof(contract.LastName), ref messages);
             #endregion
 
-            return messages;
+            return Task.FromResult(messages);
         }
 
         public bool AbortOnFailure() => false;

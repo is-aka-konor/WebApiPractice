@@ -1,17 +1,17 @@
-﻿using MediatR;
-using System;
+﻿using System;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Mapper;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
+using WebApiPractice.Api.Exceptions;
 using WebApiPractice.Persistent.Context;
+using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.Resources.Customer.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
-using Microsoft.EntityFrameworkCore;
-using WebApiPractice.Api.Exceptions;
-using WebApiPractice.Api.ResponseStructure;
-using Microsoft.Extensions.Logging;
 
 namespace WebApiPractice.Api.Resources.Customer
 {

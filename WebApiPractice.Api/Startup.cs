@@ -13,6 +13,7 @@ using WebApiPractice.Api.ValidationFlow.Interfaces;
 using WebApiPractice.Api.ValidationFlow;
 using System.Reflection;
 using WebApiPractice.Api.Mapper;
+using WebApiPractice.Api.Domain;
 
 namespace WebApiPractice.Api
 {
@@ -44,6 +45,8 @@ namespace WebApiPractice.Api
                     ); 
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPractice.Api", Version = "v1" }));
             services.AddSwaggerGenNewtonsoftSupport();
+
+            services.Configure<ApiConfiguration>(Configuration.GetSection("ApiConfiguration"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
