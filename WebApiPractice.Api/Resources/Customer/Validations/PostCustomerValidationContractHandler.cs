@@ -68,14 +68,14 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
                         );
                     }
                     SharedValidationMethods.ValidateStringRequired(contract.ContactDetails[i].Details, $"ContactDetails[{i + 1}].Details", ref messages);
-                    SharedValidationMethods.ValidaStringLength(contract.ContactDetails[i].Details,  100, $"ContactDetails[{i + 1}].Details", ref messages);
+                    SharedValidationMethods.ValidateStringLength(contract.ContactDetails[i].Details,  100, $"ContactDetails[{i + 1}].Details", ref messages);
                 }
             }
             #endregion
 
             #region Length validations
-            SharedValidationMethods.ValidaStringLength(contract.FirstName, 30, nameof(contract.FirstName), ref messages);
-            SharedValidationMethods.ValidaStringLength(contract.LastName, 70, nameof(contract.LastName), ref messages);
+            SharedValidationMethods.ValidateStringLength(contract.FirstName, 30, nameof(contract.FirstName), ref messages);
+            SharedValidationMethods.ValidateStringLength(contract.LastName, 70, nameof(contract.LastName), ref messages);
             #endregion
 
             return messages;

@@ -42,6 +42,7 @@ namespace WebApiPractice.Api.Resources.Customer
     /// </summary>
     public class PostContactDetailsResponse
     {
+        [JsonIgnore]
         public int ContactDetailsId { get; set; }
         public string ContactDetailsType { get; set; } = string.Empty;
         public string Details { get; set; } = string.Empty;

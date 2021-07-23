@@ -26,11 +26,16 @@ namespace WebApiPractice.Api.Controllers
         }
 
         [HttpGet]
-        [Route("{customerId:Guid}")]
+        [Route("{customerId}")]
         [Produces("application/json")]
-        public async Task<IActionResult> GetCustomer([FromRoute] Guid customerId)
+        public async Task<IActionResult> GetCustomer([FromRoute] string customerId)
         {
-            throw new NotImplementedException();
+            var request = new GetCustomerRequest()
+            {
+                CustomerExternalId = customerId
+            };
+            var response = await this._mediator.Send(request).ConfigureAwait(false);
+            return Ok(response);
         }
 
         [HttpGet]

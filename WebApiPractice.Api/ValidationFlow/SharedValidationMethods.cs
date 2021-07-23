@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WebApiPractice.Api.ResponseStructure;
 
 namespace WebApiPractice.Api.ValidationFlow
@@ -16,7 +17,7 @@ namespace WebApiPractice.Api.ValidationFlow
             }
         }
 
-        public static void ValidaStringLength(string target, int maxLength, string fieldName, ref List<ErrorMessage> errorMessages)
+        public static void ValidateStringLength(string target, int maxLength, string fieldName, ref List<ErrorMessage> errorMessages)
         {
             if (target.Length > maxLength)
             {
@@ -25,6 +26,19 @@ namespace WebApiPractice.Api.ValidationFlow
                     $"{fieldName} must not exceed {maxLength} characters.")
                 );
             }
+        }
+
+        public static bool IsValidExternalId(string exteralId, string fieldName, out Guid externalClientGuid, ref List<ErrorMessage> errorMessages)
+        {
+            if (!Guid.TryParse(exteralId, out externalClientGuid))
+            {
+                errorMessages.Add(new ErrorMessage(
+                    fieldName,
+                    $"{fieldName} must be a valid Guid.")
+                );
+                return false;
+            }
+            return true;
         }
     }
 }

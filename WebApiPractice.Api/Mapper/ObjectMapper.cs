@@ -57,6 +57,11 @@ namespace WebApiPractice.Api.Mapper
             };
         }
 
+        private GetCustomerResponse Map(PostCustomerResponse customer)
+        {
+            return customer as GetCustomerResponse;
+        }
+
         private ContactDetails Map(PostContactDetailsRequest request)
         {
             return new ContactDetails()
