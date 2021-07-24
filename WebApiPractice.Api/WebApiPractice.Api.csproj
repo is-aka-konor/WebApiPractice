@@ -28,4 +28,10 @@
     <ProjectReference Include="..\WebApiPractice.Persistent\WebApiPractice.Persistent.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="dbFile.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
