@@ -15,7 +15,7 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
     /// </summary>
     public interface IPostCustomerValidationContract : IValidationContract
     {
-        public CustomerStatus Status { get; set; } 
+        public CustomerStatus Status { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public List<PostContactDetailsRequest> ContactDetails { get; set; }
@@ -45,17 +45,6 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
             var messages = new List<ErrorMessage>();
 
             #region Required validations
-            SharedValidationMethods.ValidateStringRequired(contract.FirstName, nameof(contract.FirstName), ref messages);
-            SharedValidationMethods.ValidateStringRequired(contract.LastName, nameof(contract.LastName), ref messages);
-
-            if (contract.Status == CustomerStatus.Unknown)
-            {
-                messages.Add(new ErrorMessage(
-                    nameof(contract.Status),
-                    $"{nameof(contract.Status)} is not recognized. Allowed values are {CustomerStatus.Prospective.Value}, {CustomerStatus.Current.Value}, {CustomerStatus.NonActive.Value}")
-                );
-            }
-
             if(contract.ContactDetails is not null)
             {
                 for (var i = 0; i < contract.ContactDetails.Count; ++i)
@@ -72,12 +61,6 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
                 }
             }
             #endregion
-
-            #region Length validations
-            SharedValidationMethods.ValidateStringLength(contract.FirstName, 30, nameof(contract.FirstName), ref messages);
-            SharedValidationMethods.ValidateStringLength(contract.LastName, 70, nameof(contract.LastName), ref messages);
-            #endregion
-
             return Task.FromResult(messages);
         }
 

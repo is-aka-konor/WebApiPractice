@@ -5,7 +5,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Domain;
-using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Api.Resources.Customer;
 
 namespace WebApiPractice.Api.Controllers
@@ -67,12 +66,14 @@ namespace WebApiPractice.Api.Controllers
             return Ok(response);
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("{customerId}")]
         [Produces("application/json")]
-        public async Task<IActionResult> UpdateCustomerStatus([FromRoute] string customerId, [FromBody] string status)
+        public async Task<IActionResult> UpdateCustomerStatus([FromRoute] string customerId, [FromBody] UpdateCustomerRequest request)
         {
-            throw new NotImplementedException();
+            request.CustomerExternalId = customerId;
+            var response = await this._mediator.Send(request).ConfigureAwait(false);
+            return Ok(response);
         }
     }
 }

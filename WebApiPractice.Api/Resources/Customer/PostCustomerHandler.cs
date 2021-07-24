@@ -17,6 +17,7 @@ namespace WebApiPractice.Api.Resources.Customer
     /// Describes a model of incoming request to create a customer
     /// </summary>
     public class PostCustomerRequest : IRequest<PostCustomerResponse>
+        , ICustomerInformationValidationContract
         , IPostCustomerValidationContract
     {
         [JsonConverter(typeof(EnumerationConverter<CustomerStatus>))]

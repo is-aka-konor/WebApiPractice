@@ -44,9 +44,9 @@ namespace WebApiPractice.Api.Mapper
             };
         }
 
-        private PostCustomerResponse Map(Customer customer)
+        private UpdateCustomerReponse Map(Customer customer)
         {
-            return new PostCustomerResponse()
+            return new UpdateCustomerReponse()
             {
                 Status = customer.Status,
                 CreatedAt = customer.CreatedAt,
@@ -57,10 +57,10 @@ namespace WebApiPractice.Api.Mapper
             };
         }
 
-        private GetCustomerResponse Map(PostCustomerResponse customer)
-        {
-            return customer as GetCustomerResponse;
-        }
+        //private GetCustomerResponse Map(UpdateCustomerReponse customer)
+        //{
+        //    return customer as GetCustomerResponse;
+        //}
 
         private ContactDetails Map(PostContactDetailsRequest request)
         {
