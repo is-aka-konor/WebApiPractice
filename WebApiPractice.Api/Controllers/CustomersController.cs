@@ -65,7 +65,8 @@ namespace WebApiPractice.Api.Controllers
             [FromQuery] string? nextCursor = "",
             [FromQuery] string? status = "",
             [FromQuery] string? firstName = "",
-            [FromQuery] string? lastName = "")
+            [FromQuery] string? lastName = "",
+            [FromQuery] string? order = "")
         {
             var request = new GetCustomersRequest()
             {
@@ -75,7 +76,8 @@ namespace WebApiPractice.Api.Controllers
                             : this._apiConfiguration.ResponseMaxLimit),
                 Status = status!,
                 FirstName = firstName!,
-                LastName = lastName!
+                LastName = lastName!,
+                Order = order!
             };
             var response = await this._mediator.Send(request).ConfigureAwait(false);
             return Ok(response);

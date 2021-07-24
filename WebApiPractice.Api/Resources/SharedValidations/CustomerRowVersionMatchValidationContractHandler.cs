@@ -56,7 +56,7 @@ namespace WebApiPractice.Api.Resources.SharedValidations
                 && !customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
             {
                 throw new ResourcePreconditionFailedException($"Resource with id:{contract.CustomerExternalId} has eTag {customer.RowVersion}. " +
-                                                                $"Please provide this string as the If-Match header parameter" );
+                                                               "Please provide this string as the If-Match header parameter" );
             }
             return messages;
         }

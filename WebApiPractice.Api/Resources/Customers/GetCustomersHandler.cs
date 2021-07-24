@@ -14,6 +14,7 @@ using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 using WebApiPractice.Api.Extensions;
 using WebApiPractice.Api.Enumerations;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace WebApiPractice.Api.Resources.Customers
 {
@@ -28,6 +29,7 @@ namespace WebApiPractice.Api.Resources.Customers
         public string Status { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string Order { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -67,9 +69,13 @@ namespace WebApiPractice.Api.Resources.Customers
         {
             var response = new GetCustomersResponse();
             var cursor = request.NextCursor.Base64DecodeInt();
+            var descOrder = !string.IsNullOrEmpty(request.Order) && request.Order.Equals("desc", StringComparison.OrdinalIgnoreCase);
+            Expression<Func<DbCustomer, bool>> whereOrder = (cursor > 0 && descOrder) ? c => c.CustomerId <= cursor
+                                                                                      : c => c.CustomerId >= cursor;
+
             var query = this._appDbContext.Customers.AsNoTracking()
                 .Include(c => c.ContactDetails)
-                .Where(c => c.CustomerId >= cursor);
+                .Where(whereOrder);
 
             if (!string.IsNullOrEmpty(request.Status))
             {
@@ -97,8 +103,10 @@ namespace WebApiPractice.Api.Resources.Customers
                 query = query.Where(c => c.LastName.Contains(request.LastName));
             }
 
-            var customers = await query.OrderBy(c => c.CreatedAt)
-                                        .Select(c => c)
+            query = descOrder ? query.OrderByDescending(c => c.CustomerId)
+                              : query = query.OrderBy(c => c.CustomerId);
+
+            var customers = await query.Select(c => c)
                                         .ToListAsync(request.Limit,
                                         (customer) =>
                                         {
