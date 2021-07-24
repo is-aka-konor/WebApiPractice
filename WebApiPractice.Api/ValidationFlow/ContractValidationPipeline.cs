@@ -59,7 +59,7 @@ namespace WebApiPractice.Api.ValidationFlow
             // run the contract validation handlers 1 by 1.
             foreach (var handler in handlersToRun)
             {
-                var response = await handler.Handle(request, cancellationToken);
+                var response = await handler.Handle(request, cancellationToken).ConfigureAwait(false);
 
                 // exist if the handler should be aborted on failure and response has errors.
                 if (handler.AbortOnFailure() && response.Count > 0)
@@ -71,7 +71,7 @@ namespace WebApiPractice.Api.ValidationFlow
             if (validationFailures.Count > 0)
                 throw new RequestExecutionException(validationFailures);
 
-            return await next();
+            return await next().ConfigureAwait(false);
         }
     }
 }

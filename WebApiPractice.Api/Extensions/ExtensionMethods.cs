@@ -24,12 +24,12 @@ namespace WebApiPractice.Api.Extensions
         public static async Task<List<TSource>> ToListAsync<TSource>(this IQueryable<TSource> source,
             int limit,
             Action<TSource> getNextCursor,
-            CancellationToken cancellationToken = default(CancellationToken))
+            CancellationToken cancellationToken = default)
         {
             if(source is null || limit <0) return new List<TSource>();
 
             // Tale limit and extra 1 record to check if there are more to take and move the next cursor
-            var result = await source.Take(limit + 1).ToListAsync(cancellationToken);
+            var result = await source.Take(limit + 1).ToListAsync(cancellationToken).ConfigureAwait(false);
             if(result.Count > limit)
             {
                 getNextCursor(result[limit]);

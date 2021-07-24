@@ -25,7 +25,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
         private CustomerNotFoundValidationContractHandler _customerNotFoundValidationContractHandler;
         private Guid _existingCustomerExternalId;
         private AppDbContext _appDbContext;
-        
+
         [TestInitialize]
         public void Initialize()
         {
@@ -60,10 +60,10 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                ExternalId = this._existingCustomerExternalId.ToString()
+                CustomerExternalId = this._existingCustomerExternalId.ToString()
             };
             // Act
-            var result = await this._getCustomerHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomerHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(this._existingCustomerExternalId, result.CustomerExternalId);
@@ -75,13 +75,13 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                ExternalId = "123"
+                CustomerExternalId = "123"
             };
             // Act
             var result = this._getCustomerHandler.Handle(request, CancellationToken.None);
             // Assert
             Assert.IsNotNull(result);
-            var ex = await Assert.ThrowsExceptionAsync<ResourceNotFoundException>(() => result);
+            var ex = await Assert.ThrowsExceptionAsync<ResourceNotFoundException>(() => result).ConfigureAwait(false);
         }
 
         [TestMethod, Description("Validate invalid Guid field")]
@@ -90,10 +90,10 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                ExternalId = "123"
+                CustomerExternalId = "123"
             };
             // Act
-            var result = await this._customerNotFoundValidationContractHandler.Handle(request, CancellationToken.None);
+            var result = await this._customerNotFoundValidationContractHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("CustomerId must be a valid Guid.")), "CustomerId cannot be not Guid");
@@ -105,13 +105,13 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                ExternalId = Guid.NewGuid().ToString()
+                CustomerExternalId = Guid.NewGuid().ToString()
             };
             // Act
             var result = this._customerNotFoundValidationContractHandler.Handle(request, CancellationToken.None);
             // Assert
             Assert.IsNotNull(result);
-            var ex = await Assert.ThrowsExceptionAsync<ResourceNotFoundException>(() => result);
+            var ex = await Assert.ThrowsExceptionAsync<ResourceNotFoundException>(() => result).ConfigureAwait(false);
         }
     }
 }

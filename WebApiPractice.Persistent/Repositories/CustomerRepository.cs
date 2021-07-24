@@ -17,14 +17,14 @@ namespace WebApiPractice.Persistent.Repositories
 
         public async Task<Customer> GetCustomerByExternalId(Guid externalId)
         {
-            return await this._appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId));
+            return await this._appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId)).ConfigureAwait(false);
         }
 
         public async Task<Customer> SaveCustomer(Customer customer)
         {
             customer.RowVersion = RowVersionGenerator.GetVersion();
-            await this._appDbContext.Customers.AddAsync(customer);
-            await this._appDbContext.SaveChangesAsync();
+            await this._appDbContext.Customers.AddAsync(customer).ConfigureAwait(false);
+            await this._appDbContext.SaveChangesAsync().ConfigureAwait(false);
             return customer;
         }
 
@@ -32,7 +32,7 @@ namespace WebApiPractice.Persistent.Repositories
         {
             customer.RowVersion = RowVersionGenerator.GetVersion();
             this._appDbContext.Customers.Update(customer);
-            await this._appDbContext.SaveChangesAsync();
+            await this._appDbContext.SaveChangesAsync().ConfigureAwait(false);
             return customer;
         }
     }

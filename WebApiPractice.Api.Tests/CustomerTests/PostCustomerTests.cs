@@ -17,7 +17,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
     [TestClass]
     public class PostCustomerTests
     {
-        private PostCustomerValidationContractHandler _postCustomerValidationHandler = new PostCustomerValidationContractHandler();
+        private readonly PostCustomerValidationContractHandler _postCustomerValidationHandler = new ();
         private PostCustomerHandler _postCustomerHandler;
         private AppDbContext _appDbContext;
         [TestInitialize]
@@ -49,7 +49,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 }
             };
             // Act
-            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None);
+            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("ContactDetails[1].ContactDetailsType is not recognized")), "ContactDetailsType cannot be Unknown");
@@ -72,7 +72,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 }
             };
             // Act
-            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None);
+            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("ContactDetails[1].Details must not exceed 100")), "Contact Details cannot be longer than 100 characters");
@@ -97,7 +97,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 }
             };
             // Act
-            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None);
+            var result = await this._postCustomerValidationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Count == 0, "should pass all validations with valid request");
@@ -122,7 +122,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 }
             };
             // Act
-            var result = await this._postCustomerHandler.Handle(request, CancellationToken.None);
+            var result = await this._postCustomerHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsNotNull(this._appDbContext.Customers.SingleOrDefault(c => c.LastName.Equals(request.LastName)), "should information from a valid request");

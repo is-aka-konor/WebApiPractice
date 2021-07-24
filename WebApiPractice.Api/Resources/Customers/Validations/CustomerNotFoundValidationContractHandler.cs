@@ -16,7 +16,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
     /// </summary>
     public interface ICustomerNotFoundValidationContract : IValidationContract
     {
-        public string ExternalId { get; set; }
+        public string CustomerExternalId { get; set; }
     }
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
 
         public async Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
-            if (!(request is ICustomerNotFoundValidationContract contract))
+            if (request is not ICustomerNotFoundValidationContract contract)
             {
                 var errorMessage = $"Validation Handler {nameof(CustomerNotFoundValidationContractHandler)}" +
                                    $" could not find contract: {nameof(ICustomerNotFoundValidationContract)}";
@@ -44,8 +44,8 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
 
             #region Required validations
             var externalFieldName = "CustomerId";
-            SharedValidationMethods.ValidateStringRequired(contract.ExternalId, externalFieldName, ref messages);
-            if(!SharedValidationMethods.IsValidExternalId(contract.ExternalId, externalFieldName, out var externalClientGuid, ref messages))
+            SharedValidationMethods.ValidateStringRequired(contract.CustomerExternalId, externalFieldName, ref messages);
+            if(!SharedValidationMethods.IsValidExternalId(contract.CustomerExternalId, externalFieldName, out var externalClientGuid, ref messages))
             {
                 return messages;
             }
@@ -58,7 +58,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
                                             .ConfigureAwait(false);
             if (!isExistingCustomer)
             {
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.ExternalId}");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.CustomerExternalId}");
             }
             #endregion
             return messages;

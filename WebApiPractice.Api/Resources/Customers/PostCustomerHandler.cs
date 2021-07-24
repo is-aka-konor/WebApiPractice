@@ -52,7 +52,7 @@ namespace WebApiPractice.Api.Resources.Customers
         public async Task<PostCustomerResponse> Handle(PostCustomerRequest request, CancellationToken cancellationToken)
         {
             var customer = this._mapper.Map<PostCustomerRequest, DbCustomer>(request);
-            customer = await this._repository.SaveCustomer(customer);
+            customer = await this._repository.SaveCustomer(customer).ConfigureAwait(false);
             return this._mapper.Map<DbCustomer, PostCustomerResponse>(customer);
         }
     }

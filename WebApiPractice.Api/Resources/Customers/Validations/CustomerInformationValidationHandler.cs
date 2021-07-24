@@ -30,7 +30,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
 
         public Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
-            if (!(request is ICustomerInformationValidationContract contract))
+            if (request is not ICustomerInformationValidationContract contract)
             {
                 var errorMessage = $"Validation Handler {nameof(CustomerInformationValidationHandler)}" +
                                    $" could not find contract: {nameof(ICustomerInformationValidationContract)}";

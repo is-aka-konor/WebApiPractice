@@ -24,7 +24,9 @@ namespace WebApiPractice.Api.Resources.Customers
         , ICustomerInformationValidationContract
     {
         [JsonIgnore]
-        public string ExternalId { get; set; } = string.Empty;
+        public string ExternalId => CustomerExternalId;
+        [JsonIgnore]
+        public string CustomerExternalId { get; set; } = string.Empty;
         [JsonIgnore]
         public string RowVersion { get; set; } = string.Empty;
         [JsonConverter(typeof(EnumerationConverter<CustomerStatus>))]
@@ -38,7 +40,7 @@ namespace WebApiPractice.Api.Resources.Customers
     /// </summary>
     public class UpdateCustomerReponse : PostCustomerResponse
     {
-    } 
+    }
 
     /// <summary>
     /// Handles update customer requests of type <see cref="UpdateCustomerRequest"/>
@@ -60,24 +62,24 @@ namespace WebApiPractice.Api.Resources.Customers
         #endregion
         public async Task<UpdateCustomerReponse> Handle(UpdateCustomerRequest request, CancellationToken cancellationToken)
         {
-            var externalId = Guid.TryParse(request.ExternalId, out var guid) ? guid : Guid.Empty;
+            var externalId = Guid.TryParse(request.CustomerExternalId, out var guid) ? guid : Guid.Empty;
             if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                this._logger.LogWarning($"An update customer request with unrecognized Guid {request.ExternalId} by pass validation. Please investigate.");
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.ExternalId}");
+                this._logger.LogWarning($"An update customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            var customer = await this._repository.GetCustomerByExternalId(externalId);
+            var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
             if (customer is null)
             {
                 // If validation contracts were applied correctly then we should not be here
-                this._logger.LogWarning($"An update customer request with customer external id: {request.ExternalId} by pass validation. Please investigate.");
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.ExternalId}");
+                this._logger.LogWarning($"An update customer request with customer external id: {request.CustomerExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            customer.Status = request.Status.Value; 
+            customer.Status = request.Status.Value;
             customer.FirstName = request.FirstName;
-            customer.LastName = request.LastName;            
-            customer = await this._repository.UpdateCustomer(customer);
+            customer.LastName = request.LastName;
+            customer = await this._repository.UpdateCustomer(customer).ConfigureAwait(false);
             return this._mapper.Map<DbCustomer, UpdateCustomerReponse>(customer);
         }
     }

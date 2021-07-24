@@ -28,8 +28,4 @@
     <ProjectReference Include="..\WebApiPractice.Persistent\WebApiPractice.Persistent.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\Notes\" />
-  </ItemGroup>
-
 </Project>

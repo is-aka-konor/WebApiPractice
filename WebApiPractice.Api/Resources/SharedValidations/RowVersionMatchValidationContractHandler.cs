@@ -15,7 +15,7 @@ namespace WebApiPractice.Api.Resources.SharedValidations
     /// </summary>
     public interface IRowVersionMatchValidationContractHandler : IValidationContract
     {
-        public string ExternalId { get; set; }
+        public string CustomerExternalId { get; set; }
         public string RowVersion { get; set; }
     }
 
@@ -33,7 +33,7 @@ namespace WebApiPractice.Api.Resources.SharedValidations
         #endregion
         public async Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
-            if (!(request is IRowVersionMatchValidationContractHandler contract))
+            if (request is not IRowVersionMatchValidationContractHandler contract)
             {
                 var errorMessage = $"Validation Handler {nameof(RowVersionMatchValidationContractHandler)}" +
                                    $" could not find contract: {nameof(IRowVersionMatchValidationContractHandler)}";
@@ -41,17 +41,17 @@ namespace WebApiPractice.Api.Resources.SharedValidations
             }
             var messages = new List<ErrorMessage>();
 
-            var externalId = Guid.TryParse(contract.ExternalId, out var guid) ? guid : Guid.Empty;
+            var externalId = Guid.TryParse(contract.CustomerExternalId, out var guid) ? guid : Guid.Empty;
             if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                _logger.LogWarning($"A request with the interface {nameof(IRowVersionMatchValidationContractHandler)} with unrecognized Guid {contract.ExternalId} by pass validation. Please investigate.");
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.ExternalId}");
+                _logger.LogWarning($"A request with the interface {nameof(IRowVersionMatchValidationContractHandler)} with unrecognized Guid {contract.CustomerExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.CustomerExternalId}");
             }
             var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
             if(!customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ResourcePreconditionFailedException($"Resource with id:{contract.ExternalId} has eTag{customer.RowVersion}" );
+                throw new ResourcePreconditionFailedException($"Resource with id:{contract.CustomerExternalId} has eTag{customer.RowVersion}" );
             }
             return messages;
         }

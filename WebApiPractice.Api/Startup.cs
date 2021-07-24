@@ -1,19 +1,19 @@
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using WebApiPractice.Persistent.Context;
 using Serilog;
-using MediatR;
-using WebApiPractice.Api.Extensions;
-using WebApiPractice.Api.ValidationFlow.Interfaces;
-using WebApiPractice.Api.ValidationFlow;
 using System.Reflection;
-using WebApiPractice.Api.Mapper;
 using WebApiPractice.Api.Domain;
+using WebApiPractice.Api.Extensions;
+using WebApiPractice.Api.Mapper;
+using WebApiPractice.Api.ValidationFlow;
+using WebApiPractice.Api.ValidationFlow.Interfaces;
+using WebApiPractice.Persistent.Context;
 using WebApiPractice.Persistent.Repositories;
 
 namespace WebApiPractice.Api
@@ -41,10 +41,11 @@ namespace WebApiPractice.Api
             services.AddScoped<AppDbContext>();
             services.AddScoped<IObjectMapper, ObjectMapper>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<INoteRepository, NoteRepository>();
             services.AddControllers()
                     .AddNewtonsoftJson(
                         options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                    ); 
+                    );
             services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApiPractice.Api", Version = "v1" }));
             services.AddSwaggerGenNewtonsoftSupport();
 

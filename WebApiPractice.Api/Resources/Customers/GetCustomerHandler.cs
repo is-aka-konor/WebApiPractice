@@ -22,7 +22,7 @@ namespace WebApiPractice.Api.Resources.Customers
     public class GetCustomerRequest : IRequest<GetCustomerResponse>
         , ICustomerNotFoundValidationContract
     {
-        public string ExternalId { get; set; } = string.Empty;
+        public string CustomerExternalId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -60,14 +60,16 @@ namespace WebApiPractice.Api.Resources.Customers
         #endregion
         public async Task<GetCustomerResponse> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
-            var externalId = Guid.TryParse(request.ExternalId, out var guid) ? guid : Guid.Empty;
+            var externalId = Guid.TryParse(request.CustomerExternalId, out var guid) ? guid : Guid.Empty;
             if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                _logger.LogWarning($"A get customer request with unrecognized Guid {request.ExternalId} by pass validation. Please investigate.");
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.ExternalId}");
+                _logger.LogWarning($"A get customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            var customer = await _appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId));
+            var customer = await _appDbContext.Customers.Include(c => c.ContactDetails)
+                                .FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId), cancellationToken)
+                                .ConfigureAwait(false);
             return _mapper.Map<DbCustomer, GetCustomerResponse>(customer);
         }
     }

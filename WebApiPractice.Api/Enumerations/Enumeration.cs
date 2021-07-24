@@ -7,30 +7,21 @@ namespace WebApiPractice.Api.Enumerations
 {
     public abstract class Enumeration : IComparable
     {
-        private readonly string _value;
-        private readonly string _displayName;
-
         protected Enumeration()
         {
-            _value = string.Empty;
-            _displayName = string.Empty;
+            Value = string.Empty;
+            DisplayName = string.Empty;
         }
 
         protected Enumeration(string value, string displayName)
         {
-            _value = value;
-            _displayName = displayName;
+            Value = value;
+            DisplayName = displayName;
         }
 
-        public string Value
-        {
-            get { return _value; }
-        }
+        public string Value { get; }
 
-        public string DisplayName
-        {
-            get { return _displayName; }
-        }
+        public string DisplayName { get; }
 
         public override string ToString()
         {
@@ -45,9 +36,8 @@ namespace WebApiPractice.Api.Enumerations
             foreach (var info in fields)
             {
                 var instance = new T();
-                var locatedValue = info.GetValue(instance) as T;
 
-                if (locatedValue != null)
+                if (info.GetValue(instance) is T locatedValue)
                 {
                     yield return locatedValue;
                 }
@@ -56,37 +46,35 @@ namespace WebApiPractice.Api.Enumerations
 
         public override bool Equals(object? obj)
         {
-            var otherValue = obj as Enumeration;
-
-            if (otherValue == null)
+            if (obj is not Enumeration otherValue)
             {
                 return false;
             }
 
             var typeMatches = GetType().Equals(obj?.GetType());
-            var valueMatches = _value.Equals(otherValue.Value);
+            var valueMatches = Value.Equals(otherValue.Value);
 
             return typeMatches && valueMatches;
         }
 
         public override int GetHashCode()
         {
-            return _value.GetHashCode();
+            return Value.GetHashCode();
         }
 
         public static T FromValue<T>(string value) where T : Enumeration, new()
         {
-            var matchingItem = parse<T, string>(value, "value", item => item.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
+            var matchingItem = Parse<T, string>(value, "value", item => item.Value.Equals(value, StringComparison.OrdinalIgnoreCase));
             return matchingItem;
         }
 
         public static T FromDisplayName<T>(string displayName) where T : Enumeration, new()
         {
-            var matchingItem = parse<T, string>(displayName, "display name", item => item.DisplayName == displayName);
+            var matchingItem = Parse<T, string>(displayName, "display name", item => item.DisplayName == displayName);
             return matchingItem;
         }
 
-        private static T parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumeration, new()
+        private static T Parse<T, K>(K value, string description, Func<T, bool> predicate) where T : Enumeration, new()
         {
             var matchingItem = GetAll<T>().FirstOrDefault(predicate);
 

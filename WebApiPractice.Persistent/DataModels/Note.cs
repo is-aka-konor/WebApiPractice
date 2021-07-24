@@ -23,7 +23,6 @@ namespace WebApiPractice.Persistent.DataModels
             builder.Property(e => e.NoteId).HasColumnName("Id");
             builder.Property(e => e.NoteExternalId).HasColumnName("ExternalId");
             builder.Property(e => e.CreatedAt).ValueGeneratedOnAdd();
-            builder.Property(e => e.UpdateAt).ValueGeneratedOnAddOrUpdate();
             builder.Property(e => e.NoteText).HasMaxLength(1000);
         }
     }

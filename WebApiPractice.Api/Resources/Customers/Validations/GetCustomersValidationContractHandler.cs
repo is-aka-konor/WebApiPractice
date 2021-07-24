@@ -21,7 +21,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
     {
         public Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
-            if (!(request is IGetCustomersValidationContract contract))
+            if (request is not IGetCustomersValidationContract contract)
             {
                 var errorMessage = $"Validation Handler {nameof(GetCustomersValidationContractHandler)}" +
                                    $" could not find contract: {nameof(IGetCustomersValidationContract)}";
@@ -41,7 +41,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
                         nameof(contract.Status),
                         $"{nameof(contract.Status)} is not recognized. Allowed values are {CustomerStatus.Prospective.Value}, {CustomerStatus.Current.Value}, {CustomerStatus.NonActive.Value}")
                     );
-                }                
+                }
             }
 
             #region Length validations

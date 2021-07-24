@@ -53,7 +53,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             this._appDbContext = dbContext;
             this._updateCustomerInformationHandler = new UpdateCustomerInformationHandler(new CustomerRepository(this._appDbContext), mapper, LoggerMock.Object);
             this._rowVersionMatchValidationContractHandler = new RowVersionMatchValidationContractHandler(
-                                                                    new CustomerRepository(this._appDbContext), 
+                                                                    new CustomerRepository(this._appDbContext),
                                                                     LoggerHelper.GetLogger<RowVersionMatchValidationContractHandler>().Object);
         }
 
@@ -63,13 +63,13 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new UpdateCustomerRequest()
             {
-                ExternalId = this._currentExistingCustomerExternalId.ToString(),
+                CustomerExternalId = this._currentExistingCustomerExternalId.ToString(),
                 FirstName = "New First",
                 LastName = "New Last",
                 Status = CustomerStatus.NonActive
             };
             // Act
-            var result = await this._updateCustomerInformationHandler.Handle(request, CancellationToken.None);
+            var result = await this._updateCustomerInformationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(request.FirstName , result.FirstName, "First name should be updated");
@@ -83,7 +83,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new UpdateCustomerRequest()
             {
-                ExternalId = this._currentExistingCustomerExternalId.ToString(),
+                CustomerExternalId = this._currentExistingCustomerExternalId.ToString(),
                 FirstName = "New First",
                 LastName = "New Last",
                 Status = CustomerStatus.NonActive,
@@ -93,7 +93,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             var result = this._rowVersionMatchValidationContractHandler.Handle(request, CancellationToken.None);
             // Assert
             Assert.IsNotNull(result);
-            var ex = await Assert.ThrowsExceptionAsync<ResourcePreconditionFailedException>(() => result);
+            var ex = await Assert.ThrowsExceptionAsync<ResourcePreconditionFailedException>(() => result).ConfigureAwait(false);
         }
     }
 }

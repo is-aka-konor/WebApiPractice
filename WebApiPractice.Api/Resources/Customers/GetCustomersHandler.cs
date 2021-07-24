@@ -85,7 +85,7 @@ namespace WebApiPractice.Api.Resources.Customers
                 {
                     this._logger.LogWarning($"A get customers request with unrecognized status {request.Status} by pass validation. Please investigate.");
                 }
-            }            
+            }
 
             if(!string.IsNullOrEmpty(request.FirstName))
             {
@@ -104,7 +104,8 @@ namespace WebApiPractice.Api.Resources.Customers
                                         {
                                             response.ResponseMetadata.HasNext = true;
                                             response.ResponseMetadata.NextCursor = customer.CustomerId.Base64Encode();
-                                        }, cancellationToken);
+                                        }, cancellationToken)
+                                        .ConfigureAwait(false);
             response.Customers = this._mapper.Map<DbCustomer, GetCustomerResponse>(customers).ToList();
             return response;
         }

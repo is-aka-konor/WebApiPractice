@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WebApiPractice.Api.Resources.Customers;
+using WebApiPractice.Api.Resources.Notes;
 using WebApiPractice.Persistent.DataModels;
 
 namespace WebApiPractice.Api.Mapper
@@ -20,6 +21,8 @@ namespace WebApiPractice.Api.Mapper
                 Customer customer => Map(customer),
                 PostContactDetailsRequest postContactDetailsRequest => Map(postContactDetailsRequest),
                 ContactDetails contactDetails => Map(contactDetails),
+                PostNoteRequest postNoteRequest => Map(postNoteRequest),
+                Note note => Map(note),
                 _ => throw new NotSupportedException()
             };
 
@@ -57,11 +60,6 @@ namespace WebApiPractice.Api.Mapper
             };
         }
 
-        //private GetCustomerResponse Map(UpdateCustomerReponse customer)
-        //{
-        //    return customer as GetCustomerResponse;
-        //}
-
         private ContactDetails Map(PostContactDetailsRequest request)
         {
             return new ContactDetails()
@@ -77,6 +75,28 @@ namespace WebApiPractice.Api.Mapper
             {
                 ContactDetailsType = contactDetails.ContactDetailsType,
                 Details = contactDetails.Details
+            };
+        }
+
+        private Note Map(PostNoteRequest request)
+        {
+            return new Note()
+            {
+                NoteExternalId = Guid.NewGuid(),
+                NoteText = request.NoteText,
+                CreatedAt = request.CreatedAt
+            };
+        }
+
+        private PostNoteResponse Map(Note note)
+        {
+            return new PostNoteResponse()
+            {
+                NoteText = note.NoteText,
+                CreatedAt = note.CreatedAt,
+                UpdateAt = note.UpdateAt,
+                NoteExternalId = note.NoteExternalId.ToString(),
+                RowVersion = note.RowVersion
             };
         }
         #endregion

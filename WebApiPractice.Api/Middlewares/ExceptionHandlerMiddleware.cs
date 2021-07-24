@@ -27,7 +27,7 @@ namespace WebApiPractice.Api.Middlewares
         {
             try
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
             }
             catch (ArgumentNullException)
             {
@@ -40,7 +40,7 @@ namespace WebApiPractice.Api.Middlewares
                 context.Response.StatusCode = 400;
                 context.Response.ContentType = "application/json";
 
-                await context.Response.WriteAsync(response);
+                await context.Response.WriteAsync(response).ConfigureAwait(false);
             }
             catch (RequestExecutionException ex)
             {
@@ -56,7 +56,7 @@ namespace WebApiPractice.Api.Middlewares
                         message = ErrorCode.Validation.Message,
                         errors
                     });
-                await context.Response.WriteAsync(response);
+                await context.Response.WriteAsync(response).ConfigureAwait(false);
             }
             catch (ResourceNotFoundException ex)
             {
@@ -68,7 +68,7 @@ namespace WebApiPractice.Api.Middlewares
                         errorCode = ErrorCode.ResourceNotFound.Code,
                         message = ex.Message
                     });
-                await context.Response.WriteAsync(response);
+                await context.Response.WriteAsync(response).ConfigureAwait(false);
             }
             catch (ResourcePreconditionFailedException ex)
             {
@@ -80,7 +80,7 @@ namespace WebApiPractice.Api.Middlewares
                         errorCode = ErrorCode.ResourcePreconditionFailure.Code,
                         message = $"{ErrorCode.ResourcePreconditionFailure.Message}. {ex.Message}"
                     });
-                await context.Response.WriteAsync(response);
+                await context.Response.WriteAsync(response).ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -93,7 +93,7 @@ namespace WebApiPractice.Api.Middlewares
                         errorCode = ErrorCode.InternalError.Code,
                         message = ErrorCode.InternalError.Message
                     });
-                await context.Response.WriteAsync(response);
+                await context.Response.WriteAsync(response).ConfigureAwait(false);
             }
         }
     }

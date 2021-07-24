@@ -11,7 +11,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
     [TestClass]
     public class CustomerInformationTests
     {
-        private CustomerInformationValidationHandler _customerInformationValidationHandler = new CustomerInformationValidationHandler();
+        private readonly CustomerInformationValidationHandler _customerInformationValidationHandler = new ();
 
         [TestMethod, Description("Validate required fields")]
         public async Task Should_FailValidation_WhenAnyOfRequiredFieldsAreEmpty()
@@ -19,7 +19,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new PostCustomerRequest();
             // Act
-            var result = await _customerInformationValidationHandler.Handle(request, CancellationToken.None);
+            var result = await _customerInformationValidationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("FirstName is required")), "FirstName cannot be empty or null");
@@ -38,7 +38,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Status = CustomerStatus.Current
             };
             // Act
-            var result = await _customerInformationValidationHandler.Handle(request, CancellationToken.None);
+            var result = await _customerInformationValidationHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("FirstName must not exceed 30")), "FirstName cannot be longer than 30 characters");

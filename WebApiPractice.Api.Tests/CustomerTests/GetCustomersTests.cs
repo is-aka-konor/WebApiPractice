@@ -22,7 +22,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
     {
         protected Mock<ILogger<GetCustomersHandler>> LoggerMock = LoggerHelper.GetLogger<GetCustomersHandler>();
         private GetCustomersHandler _getCustomersHandler;
-        private GetCustomersValidationContractHandler _getCustomersValidationContractHandler = new GetCustomersValidationContractHandler();
+        private readonly GetCustomersValidationContractHandler _getCustomersValidationContractHandler = new ();
         private Guid _currentExistingCustomerExternalId;
         private Guid _nonActiveExistingCustomerExternalId;
         private Guid _prospectiveExistingCustomerExternalId;
@@ -96,7 +96,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Status = "123"
             };
             // Act
-            var result = await this._getCustomersValidationContractHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersValidationContractHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("Status is not recognized")), "Status filter value should be from the enumeration list");
@@ -113,7 +113,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Status = CustomerStatus.Current.Value
             };
             // Act
-            var result = await this._getCustomersValidationContractHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersValidationContractHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Any(mes => mes.Description.Contains("FirstName must not exceed 30")), "FirstName cannot be longer than 30 characters");
@@ -129,7 +129,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Limit = 1
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 1);
@@ -146,7 +146,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Status = CustomerStatus.NonActive.Value
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 2);
@@ -162,7 +162,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 FirstName = "Unit 1"
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 1);
@@ -178,7 +178,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 LastName = "Test 3"
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 1);
@@ -195,7 +195,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 Status = CustomerStatus.NonActive.Value
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 1);
@@ -211,7 +211,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 NextCursor = 3.Base64Encode()
             };
             // Act
-            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None);
+            var result = await this._getCustomersHandler.Handle(request, CancellationToken.None).ConfigureAwait(false);
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result.Customers.Count == 1);
