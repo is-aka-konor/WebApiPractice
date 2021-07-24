@@ -53,9 +53,11 @@ namespace WebApiPractice.Api.Resources.SharedValidations
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.NoteExternalId}");
             }
             var customer = await this._repository.GetNoteByExternalId(externalId).ConfigureAwait(false);
-            if (!customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
+            if (! string.IsNullOrWhiteSpace(contract.RowVersion)
+                && !customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ResourcePreconditionFailedException($"Resource with id:{contract.NoteExternalId} has eTag{customer.RowVersion}");
+                throw new ResourcePreconditionFailedException($"Resource with id:{contract.NoteExternalId} has eTag: {customer.RowVersion}. " +
+                                                                $"Please provide this string as the If-Match header parameter");
             }
             return messages;
         }
