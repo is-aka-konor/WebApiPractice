@@ -69,7 +69,7 @@ namespace WebApiPractice.Api.Resources.Customers
                 this._logger.LogWarning($"An update customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
+            var customer = await this._repository.GetCustomerByExternalId(externalId, cancellationToken).ConfigureAwait(false);
             if (customer is null)
             {
                 // If validation contracts were applied correctly then we should not be here
@@ -79,7 +79,7 @@ namespace WebApiPractice.Api.Resources.Customers
             customer.Status = request.Status.Value;
             customer.FirstName = request.FirstName;
             customer.LastName = request.LastName;
-            customer = await this._repository.UpdateCustomer(customer).ConfigureAwait(false);
+            customer = await this._repository.UpdateCustomer(customer, cancellationToken).ConfigureAwait(false);
             return this._mapper.Map<DbCustomer, UpdateCustomerReponse>(customer);
         }
     }

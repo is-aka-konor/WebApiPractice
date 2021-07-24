@@ -51,7 +51,7 @@ namespace WebApiPractice.Api.Resources.SharedValidations
                 _logger.LogWarning($"A request with the interface {nameof(ICustomerRowVersionMatchValidationContract)} with unrecognized Guid {contract.CustomerExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.CustomerExternalId}");
             }
-            var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
+            var customer = await this._repository.GetCustomerByExternalId(externalId, cancellationToken).ConfigureAwait(false);
             if(!string.IsNullOrWhiteSpace(contract.RowVersion)
                 && !customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
             {

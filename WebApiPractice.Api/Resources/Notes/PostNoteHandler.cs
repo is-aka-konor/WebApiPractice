@@ -64,10 +64,10 @@ namespace WebApiPractice.Api.Resources.Notes
                 _logger.LogWarning($"A post note request with unrecognized Customer Guid {request.CustomerExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            var customer = await this._customerRepository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
+            var customer = await this._customerRepository.GetCustomerByExternalId(externalId, cancellationToken).ConfigureAwait(false);
             var note = this._mapper.Map<PostNoteRequest, Note>(request);
             note.Customer = customer;
-            note = await this._noteRepository.SaveNote(note).ConfigureAwait(false);
+            note = await this._noteRepository.SaveNote(note, cancellationToken).ConfigureAwait(false);
             return this._mapper.Map<Note, PostNoteResponse>(note);
         }
     }

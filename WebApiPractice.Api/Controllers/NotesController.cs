@@ -97,5 +97,23 @@ namespace WebApiPractice.Api.Controllers
             HttpContext.Response.Headers.Add(HeaderNames.ETag, response.RowVersion);
             return Ok(response);
         }
+
+        [HttpDelete]
+        [Route("{customerId}/[controller]/{noteId}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> DeleteNote([FromRoute] string customerId, [FromRoute] string noteId)
+        {
+            var request = new DeleteNoteRequest()
+            {
+                CustomerExternalId = customerId,
+                NoteExternalId = noteId
+            };
+            if (HttpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+            {
+                request.RowVersion = HttpContext.Request.Headers[HeaderNames.IfMatch].ToString();
+            }
+            var response = await this._mediator.Send(request).ConfigureAwait(false);
+            return Ok(response);
+        }
     }
 }

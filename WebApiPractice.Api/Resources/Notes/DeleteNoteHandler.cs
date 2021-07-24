@@ -2,27 +2,26 @@
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Exceptions;
-using WebApiPractice.Api.Mapper;
 using WebApiPractice.Api.Resources.Customers.Validations;
 using WebApiPractice.Api.Resources.Notes.Validations;
 using WebApiPractice.Api.Resources.SharedValidations;
 using WebApiPractice.Api.ResponseStructure;
-using WebApiPractice.Persistent.DataModels;
 using WebApiPractice.Persistent.Repositories;
 
 namespace WebApiPractice.Api.Resources.Notes
 {
     /// <summary>
-    /// Describes a model of incoming request to update customer's note
+    /// Describes a model of incoming request to Delete customer's note
     /// </summary>
-    public class UpdateNoteRequest : IRequest<UpdateNoteResponse>
+    public class DeleteNoteRequest : IRequest<DeleteNoteResponse>
         , ICustomerNotFoundValidationContract
         , INoteNotFoundValidationContract
         , INoteRowVersionMatchValidationContract
-        , INoteValidationContract
     {
         [JsonIgnore]
         public string ExternalId => NoteExternalId;
@@ -32,34 +31,30 @@ namespace WebApiPractice.Api.Resources.Notes
         public string NoteExternalId { get; set; } = string.Empty;
         [JsonIgnore]
         public string RowVersion { get; set; } = string.Empty;
-        public string NoteText { get; set; } = string.Empty;
     }
 
     /// <summary>
-    /// Describes a model of the response to <see cref="UpdateNoteRequest"/>
+    /// Describes a model of the response to <see cref="DeleteNoteRequest"/>
     /// </summary>
-    public class UpdateNoteResponse : PostNoteResponse { }
+    public class DeleteNoteResponse
+    {
+        public string Message { get; set; } = string.Empty;
+    }
 
-    /// <summary>
-    /// Handles update customer's note requests of type <see cref="UpdateNoteRequest"/>
-    /// </summary>
-    public class UpdateNoteHandler : IRequestHandler<UpdateNoteRequest, UpdateNoteResponse>
+    public class DeleteNoteHandler : IRequestHandler<DeleteNoteRequest, DeleteNoteResponse>
     {
         #region Private fields and constructor
-        private readonly ILogger<UpdateNoteHandler> _logger;
+        private readonly ILogger<DeleteNoteHandler> _logger;
         private readonly INoteRepository _noteRepository;
-        private readonly IObjectMapper _mapper;
-        public UpdateNoteHandler(INoteRepository noteRepository
-                , IObjectMapper mapper
-                , ILogger<UpdateNoteHandler> logger)
+        public DeleteNoteHandler(INoteRepository noteRepository
+                , ILogger<DeleteNoteHandler> logger)
         {
             this._noteRepository = noteRepository;
-            this._mapper = mapper;
             this._logger = logger;
         }
         #endregion
 
-        public async Task<UpdateNoteResponse> Handle(UpdateNoteRequest request, CancellationToken cancellationToken)
+        public async Task<DeleteNoteResponse> Handle(DeleteNoteRequest request, CancellationToken cancellationToken)
         {
             var noteExternalId = Guid.TryParse(request.NoteExternalId, out var noteGuid) ? noteGuid : Guid.Empty;
             if (noteExternalId == Guid.Empty)
@@ -75,10 +70,8 @@ namespace WebApiPractice.Api.Resources.Notes
                 this._logger.LogWarning($"An update note request with note external id: {request.NoteExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.NoteExternalId}");
             }
-
-            note.NoteText = request.NoteText;
-            note = await this._noteRepository.UpdateNote(note, cancellationToken).ConfigureAwait(false);
-            return this._mapper.Map<Note, UpdateNoteResponse>(note);
+            await this._noteRepository.DeleteNote(note, cancellationToken).ConfigureAwait(false);
+            return new DeleteNoteResponse() { Message = $"A note with id {request.ExternalId} successfully deleted." };
         }
     }
 }

@@ -16,6 +16,7 @@ namespace WebApiPractice.Api.Resources.Notes.Validations
     /// </summary>
     public interface INoteNotFoundValidationContract : IValidationContract
     {
+        public string CustomerExternalId { get; set; }
         public string NoteExternalId { get; set; }
     }
 
@@ -52,12 +53,17 @@ namespace WebApiPractice.Api.Resources.Notes.Validations
             #endregion
 
             #region Id Check
-            var isExistingNote = await this._appDbContext
-                                                .Notes.AnyAsync(m => m.NoteExternalId.Equals(externalClientGuid), cancellationToken)
+            var note = await this._appDbContext.Notes.AsNoTracking()
+                                                .Include(n => n.Customer)
+                                                .FirstOrDefaultAsync(m => m.NoteExternalId.Equals(externalClientGuid), cancellationToken)
                                                 .ConfigureAwait(false);
-            if (!isExistingNote)
+            if (note is null)
             {
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.NoteExternalId}");
+            }
+            if (!note.Customer.CustomerExternalId.ToString().Equals(contract.CustomerExternalId, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.NoteExternalId} for customer {contract.CustomerExternalId}");
             }
             #endregion
             return messages;

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace WebApiPractice.Api.Resources.Notes
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public string NoteText { get; set; } = string.Empty;
+        [JsonIgnore]
         public string RowVersion { get; set; } = string.Empty;
     }
     public class GetNoteHandler : IRequestHandler<GetNoteRequest, GetNoteResponse>
