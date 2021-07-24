@@ -6,7 +6,6 @@ using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.ValidationFlow;
 using WebApiPractice.Api.ValidationFlow.Interfaces;
-using WebApiPractice.Persistent.Context;
 
 namespace WebApiPractice.Api.Resources.Customer.Validations
 {
@@ -26,11 +25,7 @@ namespace WebApiPractice.Api.Resources.Customer.Validations
     public class CustomerInformationValidationHandler : IValidationContractHandler
     {
         #region Constructor & private fields
-        private readonly AppDbContext _appDbContext;
-        public CustomerInformationValidationHandler(AppDbContext appDbContext)
-        {
-            this._appDbContext = appDbContext;
-        }
+        public CustomerInformationValidationHandler() { }
         #endregion
 
         public Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)

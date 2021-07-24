@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApiPractice.Api.Resources.Customer;
 using WebApiPractice.Persistent.DataModels;
 

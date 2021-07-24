@@ -10,7 +10,6 @@ using WebApiPractice.Api.Resources.Customer.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 
-
 namespace WebApiPractice.Api.Resources.Customer
 {
     /// <summary>

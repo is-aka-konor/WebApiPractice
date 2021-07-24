@@ -6,7 +6,6 @@ using WebApiPractice.Api.Mapper;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using WebApiPractice.Api.Exceptions;
 using WebApiPractice.Persistent.Context;
 using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.Resources.Customer.Validations;
@@ -54,10 +53,10 @@ namespace WebApiPractice.Api.Resources.Customer
         #region Private fields and constructor
         private readonly AppDbContext _appDbContext;
         private readonly IObjectMapper _mapper;
-        private readonly ILogger<GetCustomerHandler> _logger;
+        private readonly ILogger<GetCustomersHandler> _logger;
         public GetCustomersHandler(AppDbContext appDbContext,
             IObjectMapper mapper,
-            ILogger<GetCustomerHandler> logger)
+            ILogger<GetCustomersHandler> logger)
         {
             this._appDbContext = appDbContext;
             this._logger = logger;
