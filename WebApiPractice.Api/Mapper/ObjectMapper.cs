@@ -88,9 +88,9 @@ namespace WebApiPractice.Api.Mapper
             };
         }
 
-        private PostNoteResponse Map(Note note)
+        private UpdateNoteResponse Map(Note note)
         {
-            return new PostNoteResponse()
+            return new UpdateNoteResponse()
             {
                 NoteText = note.NoteText,
                 CreatedAt = note.CreatedAt,

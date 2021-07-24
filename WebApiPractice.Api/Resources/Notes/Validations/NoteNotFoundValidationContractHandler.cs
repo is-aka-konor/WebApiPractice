@@ -43,7 +43,7 @@ namespace WebApiPractice.Api.Resources.Notes.Validations
             var messages = new List<ErrorMessage>();
 
             #region Required validations
-            var externalFieldName = "CustomerId";
+            var externalFieldName = "NoteId";
             SharedValidationMethods.ValidateStringRequired(contract.NoteExternalId, externalFieldName, ref messages);
             if (!SharedValidationMethods.IsValidExternalId(contract.NoteExternalId, externalFieldName, out var externalClientGuid, ref messages))
             {

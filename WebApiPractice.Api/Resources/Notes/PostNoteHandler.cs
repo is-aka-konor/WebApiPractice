@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Exceptions;

@@ -20,7 +20,7 @@ namespace WebApiPractice.Api.Resources.Customers
     /// </summary>
     public class UpdateCustomerRequest : IRequest<UpdateCustomerReponse>
         , ICustomerNotFoundValidationContract
-        , IRowVersionMatchValidationContractHandler
+        , ICustomerRowVersionMatchValidationContract
         , ICustomerInformationValidationContract
     {
         [JsonIgnore]

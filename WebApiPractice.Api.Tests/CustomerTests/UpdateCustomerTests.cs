@@ -21,7 +21,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
     public class UpdateCustomerTests
     {
         protected Mock<ILogger<UpdateCustomerInformationHandler>> LoggerMock = LoggerHelper.GetLogger<UpdateCustomerInformationHandler>();
-        private RowVersionMatchValidationContractHandler _rowVersionMatchValidationContractHandler;
+        private CustomerRowVersionMatchValidationContractHandler _rowVersionMatchValidationContractHandler;
         private UpdateCustomerInformationHandler _updateCustomerInformationHandler;
         private Guid _currentExistingCustomerExternalId;
         private AppDbContext _appDbContext;
@@ -52,9 +52,9 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 .Build();
             this._appDbContext = dbContext;
             this._updateCustomerInformationHandler = new UpdateCustomerInformationHandler(new CustomerRepository(this._appDbContext), mapper, LoggerMock.Object);
-            this._rowVersionMatchValidationContractHandler = new RowVersionMatchValidationContractHandler(
+            this._rowVersionMatchValidationContractHandler = new CustomerRowVersionMatchValidationContractHandler(
                                                                     new CustomerRepository(this._appDbContext),
-                                                                    LoggerHelper.GetLogger<RowVersionMatchValidationContractHandler>().Object);
+                                                                    LoggerHelper.GetLogger<CustomerRowVersionMatchValidationContractHandler>().Object);
         }
 
         [TestMethod, Description("Customer information updated")]

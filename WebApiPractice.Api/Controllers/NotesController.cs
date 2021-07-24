@@ -81,5 +81,21 @@ namespace WebApiPractice.Api.Controllers
             var response = await this._mediator.Send(request).ConfigureAwait(false);
             return Ok(response);
         }
+
+        [HttpPut]
+        [Route("{customerId}/[controller]/{noteId}")]
+        [Produces("application/json")]
+        public async Task<IActionResult> UpdateNote([FromRoute] string customerId, [FromRoute] string noteId, [FromBody] UpdateNoteRequest request)
+        {
+            request.CustomerExternalId = customerId;
+            request.NoteExternalId = noteId;
+            if (HttpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+            {
+                request.RowVersion = HttpContext.Request.Headers[HeaderNames.IfMatch].ToString();
+            }
+            var response = await this._mediator.Send(request).ConfigureAwait(false);
+            HttpContext.Response.Headers.Add(HeaderNames.ETag, response.RowVersion);
+            return Ok(response);
+        }
     }
 }

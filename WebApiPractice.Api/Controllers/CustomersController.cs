@@ -84,7 +84,7 @@ namespace WebApiPractice.Api.Controllers
         [HttpPut]
         [Route("{customerId}")]
         [Produces("application/json")]
-        public async Task<IActionResult> UpdateCustomerStatus([FromRoute] string customerId, [FromBody] UpdateCustomerRequest request)
+        public async Task<IActionResult> UpdateCustomer([FromRoute] string customerId, [FromBody] UpdateCustomerRequest request)
         {
             request.CustomerExternalId = customerId;
             if (HttpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))

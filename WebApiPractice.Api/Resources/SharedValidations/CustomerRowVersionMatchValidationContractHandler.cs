@@ -13,19 +13,22 @@ namespace WebApiPractice.Api.Resources.SharedValidations
     /// <summary>
     /// Describes the contract to validate a request with customer information
     /// </summary>
-    public interface IRowVersionMatchValidationContractHandler : IValidationContract
+    public interface ICustomerRowVersionMatchValidationContract : IValidationContract
     {
         public string CustomerExternalId { get; set; }
         public string RowVersion { get; set; }
     }
 
-    public class RowVersionMatchValidationContractHandler : IValidationContractHandler
+    /// <summary>
+    /// Handles validation of row version changes for customers
+    /// </summary>
+    public class CustomerRowVersionMatchValidationContractHandler : IValidationContractHandler
     {
         #region Constructor & private fields
         private readonly ICustomerRepository _repository;
-        private readonly ILogger<RowVersionMatchValidationContractHandler> _logger;
-        public RowVersionMatchValidationContractHandler(ICustomerRepository repository,
-            ILogger<RowVersionMatchValidationContractHandler> logger)
+        private readonly ILogger<CustomerRowVersionMatchValidationContractHandler> _logger;
+        public CustomerRowVersionMatchValidationContractHandler(ICustomerRepository repository,
+            ILogger<CustomerRowVersionMatchValidationContractHandler> logger)
         {
             this._repository = repository;
             this._logger = logger;
@@ -33,10 +36,10 @@ namespace WebApiPractice.Api.Resources.SharedValidations
         #endregion
         public async Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
         {
-            if (request is not IRowVersionMatchValidationContractHandler contract)
+            if (request is not ICustomerRowVersionMatchValidationContract contract)
             {
-                var errorMessage = $"Validation Handler {nameof(RowVersionMatchValidationContractHandler)}" +
-                                   $" could not find contract: {nameof(IRowVersionMatchValidationContractHandler)}";
+                var errorMessage = $"Validation Handler {nameof(CustomerRowVersionMatchValidationContractHandler)}" +
+                                   $" could not find contract: {nameof(ICustomerRowVersionMatchValidationContract)}";
                 throw new Exception(errorMessage);
             }
             var messages = new List<ErrorMessage>();
@@ -45,7 +48,7 @@ namespace WebApiPractice.Api.Resources.SharedValidations
             if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                _logger.LogWarning($"A request with the interface {nameof(IRowVersionMatchValidationContractHandler)} with unrecognized Guid {contract.CustomerExternalId} by pass validation. Please investigate.");
+                _logger.LogWarning($"A request with the interface {nameof(ICustomerRowVersionMatchValidationContract)} with unrecognized Guid {contract.CustomerExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.CustomerExternalId}");
             }
             var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
@@ -57,6 +60,6 @@ namespace WebApiPractice.Api.Resources.SharedValidations
         }
 
         public bool AbortOnFailure() => true;
-        public Type GetValidationContractType() => typeof(IRowVersionMatchValidationContractHandler);
+        public Type GetValidationContractType() => typeof(ICustomerRowVersionMatchValidationContract);
     }
 }
