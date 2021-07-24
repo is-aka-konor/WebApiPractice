@@ -8,14 +8,15 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using WebApiPractice.Persistent.Context;
 using WebApiPractice.Api.ResponseStructure;
-using WebApiPractice.Api.Resources.Customer.Validations;
+using WebApiPractice.Api.Resources.Customers.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 using WebApiPractice.Api.Extensions;
 using WebApiPractice.Api.Enumerations;
 using System.Linq;
+using WebApiPractice.Api.Resources.Customers;
 
-namespace WebApiPractice.Api.Resources.Customer
+namespace WebApiPractice.Api.Resources.Customers
 {
     /// <summary>
     /// Describes a model of incoming request to get customers

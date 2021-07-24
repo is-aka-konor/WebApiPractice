@@ -7,7 +7,7 @@ using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.ValidationFlow;
 using WebApiPractice.Api.ValidationFlow.Interfaces;
 
-namespace WebApiPractice.Api.Resources.Customer.Validations
+namespace WebApiPractice.Api.Resources.Customers.Validations
 {
     /// <summary>
     /// Describes the contract to validate a request with customer information

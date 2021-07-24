@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using WebApiPractice.Api.Exceptions;
 using WebApiPractice.Persistent.Context;
 using WebApiPractice.Api.ResponseStructure;
-using WebApiPractice.Api.Resources.Customer.Validations;
+using WebApiPractice.Api.Resources.Customers.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 
-namespace WebApiPractice.Api.Resources.Customer
+namespace WebApiPractice.Api.Resources.Customers
 {
     /// <summary>
     /// Describes a model of incoming request to get a customer
@@ -50,22 +50,22 @@ namespace WebApiPractice.Api.Resources.Customer
             IObjectMapper mapper,
             ILogger<GetCustomerHandler> logger)
         {
-            this._appDbContext = appDbContext;
-            this._logger = logger;
-            this._mapper = mapper;
+            _appDbContext = appDbContext;
+            _logger = logger;
+            _mapper = mapper;
         }
         #endregion
         public async Task<GetCustomerResponse> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
             var externalId = Guid.TryParse(request.CustomerExternalId, out var guid) ? guid : Guid.Empty;
-            if(externalId == Guid.Empty)
+            if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                this._logger.LogWarning($"A get customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
+                _logger.LogWarning($"A get customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
                 throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
             }
-            var customer = await this._appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId));
-            return this._mapper.Map<DbCustomer, GetCustomerResponse>(customer);
+            var customer = await _appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId));
+            return _mapper.Map<DbCustomer, GetCustomerResponse>(customer);
         }
     }
 }

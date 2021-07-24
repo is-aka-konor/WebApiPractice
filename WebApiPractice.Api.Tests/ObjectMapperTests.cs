@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Api.Mapper;
-using WebApiPractice.Api.Resources.Customer;
+using WebApiPractice.Api.Resources.Customers;
 using WebApiPractice.Persistent.DataModels;
 
 namespace WebApiPractice.Api.Tests

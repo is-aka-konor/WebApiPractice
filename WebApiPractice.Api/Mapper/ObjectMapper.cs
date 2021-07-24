@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WebApiPractice.Api.Resources.Customer;
+using WebApiPractice.Api.Resources.Customers;
 using WebApiPractice.Persistent.DataModels;
 
 namespace WebApiPractice.Api.Mapper

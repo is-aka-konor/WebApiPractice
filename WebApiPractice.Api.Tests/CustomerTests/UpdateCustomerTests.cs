@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Api.Mapper;
-using WebApiPractice.Api.Resources.Customer;
+using WebApiPractice.Api.Resources.Customers;
 using WebApiPractice.Api.Tests.TestBuilder;
 using WebApiPractice.Persistent.Context;
 using WebApiPractice.Persistent.DataModels;

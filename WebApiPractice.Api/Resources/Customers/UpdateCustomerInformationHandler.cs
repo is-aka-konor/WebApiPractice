@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Api.Exceptions;
 using WebApiPractice.Api.Mapper;
-using WebApiPractice.Api.Resources.Customer.Validations;
+using WebApiPractice.Api.Resources.Customers.Validations;
 using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Persistent.Context;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 
-namespace WebApiPractice.Api.Resources.Customer
+namespace WebApiPractice.Api.Resources.Customers
 {
     /// <summary>
     /// Describes a model of incoming request to update the customer

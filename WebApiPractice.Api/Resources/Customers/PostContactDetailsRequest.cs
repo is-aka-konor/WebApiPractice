@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using WebApiPractice.Api.Enumerations;
 using WebApiPractice.Persistent.Context;
 
-namespace WebApiPractice.Api.Resources.Customer
+namespace WebApiPractice.Api.Resources.Customers
 {
     /// <summary>
     /// Handles the creation of a new customer details, might be implemented in the future if required

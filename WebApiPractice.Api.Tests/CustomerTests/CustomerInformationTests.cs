@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Enumerations;
-using WebApiPractice.Api.Resources.Customer;
-using WebApiPractice.Api.Resources.Customer.Validations;
+using WebApiPractice.Api.Resources.Customers;
+using WebApiPractice.Api.Resources.Customers.Validations;
 
 namespace WebApiPractice.Api.Tests.CustomerTests
 {

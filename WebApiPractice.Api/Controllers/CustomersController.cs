@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Domain;
-using WebApiPractice.Api.Resources.Customer;
+using WebApiPractice.Api.Resources.Customers;
 
 namespace WebApiPractice.Api.Controllers
 {

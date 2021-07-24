@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Exceptions;
+using WebApiPractice.Api.Resources.Customers;
 using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.ValidationFlow;
 using WebApiPractice.Api.ValidationFlow.Interfaces;
 using WebApiPractice.Persistent.Context;
 
-namespace WebApiPractice.Api.Resources.Customer.Validations
+namespace WebApiPractice.Api.Resources.Customers.Validations
 {
     /// <summary>
     /// Describes the contract to validate a request of type <see cref="GetCustomerRequest"/>
