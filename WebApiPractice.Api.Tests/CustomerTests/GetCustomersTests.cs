@@ -26,7 +26,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
         private Guid _currentExistingCustomerExternalId;
         private Guid _nonActiveExistingCustomerExternalId;
         private Guid _prospectiveExistingCustomerExternalId;
-        private AppDbContext _appDbContex;
+        private AppDbContext _appDbContext;
 
         [TestInitialize]
         public void Initialize()
@@ -83,8 +83,8 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 .UseInMemorySqlite()
                 .WithCustomers(customers)
                 .Build();
-            this._appDbContex = dbContext;
-            this._getCustomersHandler = new GetCustomersHandler(this._appDbContex, mapper, LoggerMock.Object);
+            this._appDbContext = dbContext;
+            this._getCustomersHandler = new GetCustomersHandler(this._appDbContext, mapper, LoggerMock.Object);
         }
 
         [TestMethod, Description("Validate an invalid Status field")]

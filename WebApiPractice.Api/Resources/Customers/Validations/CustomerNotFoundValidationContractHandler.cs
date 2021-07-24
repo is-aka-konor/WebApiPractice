@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Exceptions;
-using WebApiPractice.Api.Resources.Customers;
 using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.ValidationFlow;
 using WebApiPractice.Api.ValidationFlow.Interfaces;
@@ -17,7 +16,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
     /// </summary>
     public interface ICustomerNotFoundValidationContract : IValidationContract
     {
-        public string CustomerExternalId { get; set; }
+        public string ExternalId { get; set; }
     }
 
     /// <summary>
@@ -45,8 +44,8 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
 
             #region Required validations
             var externalFieldName = "CustomerId";
-            SharedValidationMethods.ValidateStringRequired(contract.CustomerExternalId, externalFieldName, ref messages);
-            if(!SharedValidationMethods.IsValidExternalId(contract.CustomerExternalId, externalFieldName, out var externalClientGuid, ref messages))
+            SharedValidationMethods.ValidateStringRequired(contract.ExternalId, externalFieldName, ref messages);
+            if(!SharedValidationMethods.IsValidExternalId(contract.ExternalId, externalFieldName, out var externalClientGuid, ref messages))
             {
                 return messages;
             }
@@ -59,7 +58,7 @@ namespace WebApiPractice.Api.Resources.Customers.Validations
                                             .ConfigureAwait(false);
             if (!isExistingCustomer)
             {
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.CustomerExternalId}");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.ExternalId}");
             }
             #endregion
             return messages;

@@ -12,6 +12,7 @@ using WebApiPractice.Api.ResponseStructure;
 using WebApiPractice.Api.Resources.Customers.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
+using Newtonsoft.Json;
 
 namespace WebApiPractice.Api.Resources.Customers
 {
@@ -21,7 +22,7 @@ namespace WebApiPractice.Api.Resources.Customers
     public class GetCustomerRequest : IRequest<GetCustomerResponse>
         , ICustomerNotFoundValidationContract
     {
-        public string CustomerExternalId { get; set; } = string.Empty;
+        public string ExternalId { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -29,6 +30,8 @@ namespace WebApiPractice.Api.Resources.Customers
     /// </summary>
     public class GetCustomerResponse
     {
+        [JsonIgnore]
+        public string RowVersion { get; set; } = string.Empty;
         public Guid CustomerExternalId { get; set; }
         public string Status { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
@@ -57,12 +60,12 @@ namespace WebApiPractice.Api.Resources.Customers
         #endregion
         public async Task<GetCustomerResponse> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
-            var externalId = Guid.TryParse(request.CustomerExternalId, out var guid) ? guid : Guid.Empty;
+            var externalId = Guid.TryParse(request.ExternalId, out var guid) ? guid : Guid.Empty;
             if (externalId == Guid.Empty)
             {
                 // If validation contracts were applied correctly then we should not be here
-                _logger.LogWarning($"A get customer request with unrecognized Guid {request.CustomerExternalId} by pass validation. Please investigate.");
-                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.CustomerExternalId}");
+                _logger.LogWarning($"A get customer request with unrecognized Guid {request.ExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {request.ExternalId}");
             }
             var customer = await _appDbContext.Customers.Include(c => c.ContactDetails).FirstOrDefaultAsync(x => x.CustomerExternalId.Equals(externalId));
             return _mapper.Map<DbCustomer, GetCustomerResponse>(customer);

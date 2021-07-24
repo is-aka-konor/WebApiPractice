@@ -1,0 +1,62 @@
+﻿using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using WebApiPractice.Api.Exceptions;
+using WebApiPractice.Api.ResponseStructure;
+using WebApiPractice.Api.ValidationFlow.Interfaces;
+using WebApiPractice.Persistent.Repositories;
+
+namespace WebApiPractice.Api.Resources.SharedValidations
+{
+    /// <summary>
+    /// Describes the contract to validate a request with customer information
+    /// </summary>
+    public interface IRowVersionMatchValidationContractHandler : IValidationContract
+    {
+        public string ExternalId { get; set; }
+        public string RowVersion { get; set; }
+    }
+
+    public class RowVersionMatchValidationContractHandler : IValidationContractHandler
+    {
+        #region Constructor & private fields
+        private readonly ICustomerRepository _repository;
+        private readonly ILogger<RowVersionMatchValidationContractHandler> _logger;
+        public RowVersionMatchValidationContractHandler(ICustomerRepository repository,
+            ILogger<RowVersionMatchValidationContractHandler> logger)
+        {
+            this._repository = repository;
+            this._logger = logger;
+        }
+        #endregion
+        public async Task<List<ErrorMessage>> Handle(IValidationContract request, CancellationToken cancellationToken = default)
+        {
+            if (!(request is IRowVersionMatchValidationContractHandler contract))
+            {
+                var errorMessage = $"Validation Handler {nameof(RowVersionMatchValidationContractHandler)}" +
+                                   $" could not find contract: {nameof(IRowVersionMatchValidationContractHandler)}";
+                throw new Exception(errorMessage);
+            }
+            var messages = new List<ErrorMessage>();
+
+            var externalId = Guid.TryParse(contract.ExternalId, out var guid) ? guid : Guid.Empty;
+            if (externalId == Guid.Empty)
+            {
+                // If validation contracts were applied correctly then we should not be here
+                _logger.LogWarning($"A request with the interface {nameof(IRowVersionMatchValidationContractHandler)} with unrecognized Guid {contract.ExternalId} by pass validation. Please investigate.");
+                throw new ResourceNotFoundException($"{ErrorCode.ResourceNotFound.Message} Resource Id: {contract.ExternalId}");
+            }
+            var customer = await this._repository.GetCustomerByExternalId(externalId).ConfigureAwait(false);
+            if(!customer.RowVersion.Equals(contract.RowVersion, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ResourcePreconditionFailedException($"Resource with id:{contract.ExternalId} has eTag{customer.RowVersion}" );
+            }
+            return messages;
+        }
+
+        public bool AbortOnFailure() => true;
+        public Type GetValidationContractType() => typeof(IRowVersionMatchValidationContractHandler);
+    }
+}

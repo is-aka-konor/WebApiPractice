@@ -10,6 +10,7 @@ namespace WebApiPractice.Persistent.DataModels
         public DateTime CreatedAt { get; set; }
         public DateTime UpdateAt { get; set; }
         public string NoteText { get; set; } = string.Empty;
+        public string RowVersion { get; set; } = RowVersionGenerator.GetVersion();
         public Customer Customer { get; set; } = null!;
     }
 

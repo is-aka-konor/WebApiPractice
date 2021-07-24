@@ -14,7 +14,6 @@ using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
 using WebApiPractice.Api.Extensions;
 using WebApiPractice.Api.Enumerations;
 using System.Linq;
-using WebApiPractice.Api.Resources.Customers;
 
 namespace WebApiPractice.Api.Resources.Customers
 {

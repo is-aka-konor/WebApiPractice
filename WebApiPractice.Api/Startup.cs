@@ -14,6 +14,7 @@ using WebApiPractice.Api.ValidationFlow;
 using System.Reflection;
 using WebApiPractice.Api.Mapper;
 using WebApiPractice.Api.Domain;
+using WebApiPractice.Persistent.Repositories;
 
 namespace WebApiPractice.Api
 {
@@ -39,6 +40,7 @@ namespace WebApiPractice.Api
             services.AddDbContext<AppDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("sqlConnectionString")));
             services.AddScoped<AppDbContext>();
             services.AddScoped<IObjectMapper, ObjectMapper>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddControllers()
                     .AddNewtonsoftJson(
                         options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

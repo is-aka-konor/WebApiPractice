@@ -10,6 +10,7 @@ using WebApiPractice.Api.Resources.Customers.Validations;
 using WebApiPractice.Api.Tests.TestBuilder;
 using WebApiPractice.Persistent.Context;
 using WebApiPractice.Persistent.DataModels;
+using WebApiPractice.Persistent.Repositories;
 
 namespace WebApiPractice.Api.Tests.CustomerTests
 {
@@ -18,7 +19,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
     {
         private PostCustomerValidationContractHandler _postCustomerValidationHandler = new PostCustomerValidationContractHandler();
         private PostCustomerHandler _postCustomerHandler;
-        private AppDbContext _appDbContex;
+        private AppDbContext _appDbContext;
         [TestInitialize]
         public void Initialize()
         {
@@ -28,8 +29,8 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 .UseInMemorySqlite()
                 .WithCustomers(customers)
                 .Build();
-            this._appDbContex = dbContext;
-            _postCustomerHandler = new PostCustomerHandler(this._appDbContex, mapper);
+            this._appDbContext = dbContext;
+            _postCustomerHandler = new PostCustomerHandler(new CustomerRepository(this._appDbContext), mapper);
         }
 
         [TestMethod, Description("Validate required fields")]
@@ -124,7 +125,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             var result = await this._postCustomerHandler.Handle(request, CancellationToken.None);
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsNotNull(this._appDbContex.Customers.SingleOrDefault(c => c.LastName.Equals(request.LastName)), "should information from a valid request");
+            Assert.IsNotNull(this._appDbContext.Customers.SingleOrDefault(c => c.LastName.Equals(request.LastName)), "should information from a valid request");
         }
     }
 }

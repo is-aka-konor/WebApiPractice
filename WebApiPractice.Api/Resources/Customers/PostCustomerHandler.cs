@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using WebApiPractice.Api.Mapper;
 using System.Collections.Generic;
 using WebApiPractice.Api.Enumerations;
-using WebApiPractice.Persistent.Context;
 using WebApiPractice.Api.Resources.Customers.Validations;
 
 using DbCustomer = WebApiPractice.Persistent.DataModels.Customer;
+using WebApiPractice.Persistent.Repositories;
 
 namespace WebApiPractice.Api.Resources.Customers
 {
@@ -39,12 +39,12 @@ namespace WebApiPractice.Api.Resources.Customers
     public class PostCustomerHandler : IRequestHandler<PostCustomerRequest, PostCustomerResponse>
     {
         #region Private fields and constructor
-        private readonly AppDbContext _appDbContext;
+        private readonly ICustomerRepository _repository;
         private readonly IObjectMapper _mapper;
-        public PostCustomerHandler(AppDbContext appDbContext,
+        public PostCustomerHandler(ICustomerRepository repository,
             IObjectMapper mapper)
         {
-            this._appDbContext = appDbContext;
+            this._repository = repository;
             this._mapper = mapper;
         }
         #endregion
@@ -52,8 +52,7 @@ namespace WebApiPractice.Api.Resources.Customers
         public async Task<PostCustomerResponse> Handle(PostCustomerRequest request, CancellationToken cancellationToken)
         {
             var customer = this._mapper.Map<PostCustomerRequest, DbCustomer>(request);
-            await this._appDbContext.Customers.AddAsync(customer, cancellationToken).ConfigureAwait(false);
-            await this._appDbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            customer = await this._repository.SaveCustomer(customer);
             return this._mapper.Map<DbCustomer, PostCustomerResponse>(customer);
         }
     }

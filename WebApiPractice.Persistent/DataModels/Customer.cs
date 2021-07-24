@@ -13,6 +13,7 @@ namespace WebApiPractice.Persistent.DataModels
         public DateTime CreatedAt { get; set; }
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string RowVersion { get; set; } = RowVersionGenerator.GetVersion();
         public List<ContactDetails> ContactDetails { get; set; } = null!;
         public List<Note> Notes { get; set; } = null!;
     }

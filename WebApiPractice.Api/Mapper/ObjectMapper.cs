@@ -52,7 +52,8 @@ namespace WebApiPractice.Api.Mapper
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 ContactDetails = Map<ContactDetails, PostContactDetailsResponse>(customer.ContactDetails).ToList(),
-                CustomerExternalId = customer.CustomerExternalId
+                CustomerExternalId = customer.CustomerExternalId,
+                RowVersion = customer.RowVersion
             };
         }
 

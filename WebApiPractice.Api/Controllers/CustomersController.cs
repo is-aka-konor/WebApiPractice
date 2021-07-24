@@ -6,6 +6,8 @@ using System;
 using System.Threading.Tasks;
 using WebApiPractice.Api.Domain;
 using WebApiPractice.Api.Resources.Customers;
+using System.Net;
+using Microsoft.Net.Http.Headers;
 
 namespace WebApiPractice.Api.Controllers
 {
@@ -27,6 +29,7 @@ namespace WebApiPractice.Api.Controllers
         public async Task<IActionResult> CreateCustomer([FromBody] PostCustomerRequest request)
         {
             var response = await this._mediator.Send(request).ConfigureAwait(false);
+            HttpContext.Response.Headers.Add(HeaderNames.ETag, response.RowVersion);
             return Created(new Uri(HttpContext.Request.GetDisplayUrl()), response);
         }
 
@@ -37,9 +40,21 @@ namespace WebApiPractice.Api.Controllers
         {
             var request = new GetCustomerRequest()
             {
-                CustomerExternalId = customerId
+                ExternalId = customerId
             };
             var response = await this._mediator.Send(request).ConfigureAwait(false);
+            var eTag = response.RowVersion;
+            HttpContext.Response.Headers.Add(HeaderNames.ETag, eTag);
+            if(HttpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+            {
+                var incomingEtag = HttpContext.Request.Headers[HeaderNames.IfMatch].ToString();
+                // if both the etags are equal
+                // raise a 304 Not Modified Response
+                if (incomingEtag.Equals(eTag))
+                {
+                    return new StatusCodeResult((int)HttpStatusCode.NotModified);
+                }
+            }
             return Ok(response);
         }
 
@@ -71,8 +86,13 @@ namespace WebApiPractice.Api.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> UpdateCustomerStatus([FromRoute] string customerId, [FromBody] UpdateCustomerRequest request)
         {
-            request.CustomerExternalId = customerId;
+            request.ExternalId = customerId;
+            if (HttpContext.Request.Headers.ContainsKey(HeaderNames.IfMatch))
+            {
+                request.RowVersion = HttpContext.Request.Headers[HeaderNames.IfMatch].ToString();
+            }
             var response = await this._mediator.Send(request).ConfigureAwait(false);
+            HttpContext.Response.Headers.Add(HeaderNames.ETag, response.RowVersion);
             return Ok(response);
         }
     }

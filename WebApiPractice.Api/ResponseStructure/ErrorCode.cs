@@ -26,7 +26,7 @@
         public static ErrorCode ResourceNotFound = new("resource_not_found",
             "The requested resource could not be found.");
         
-        public static ErrorCode ResourceConflict = new("resource_conflict",
-            "The resource with the same id already exists.");
+        public static ErrorCode ResourcePreconditionFailure = new("resource_precondition_failed",
+            "The resource with the provided eTag does not exists.");
     }
 }

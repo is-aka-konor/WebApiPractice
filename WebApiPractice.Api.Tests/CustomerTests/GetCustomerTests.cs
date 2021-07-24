@@ -24,7 +24,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
         private GetCustomerHandler _getCustomerHandler;
         private CustomerNotFoundValidationContractHandler _customerNotFoundValidationContractHandler;
         private Guid _existingCustomerExternalId;
-        private AppDbContext _appDbContex;
+        private AppDbContext _appDbContext;
         
         [TestInitialize]
         public void Initialize()
@@ -49,9 +49,9 @@ namespace WebApiPractice.Api.Tests.CustomerTests
                 .UseInMemorySqlite()
                 .WithCustomers(customers)
                 .Build();
-            this._appDbContex = dbContext;
-            this._getCustomerHandler = new GetCustomerHandler(this._appDbContex, mapper, LoggerMock.Object);
-            this._customerNotFoundValidationContractHandler = new CustomerNotFoundValidationContractHandler(this._appDbContex);
+            this._appDbContext = dbContext;
+            this._getCustomerHandler = new GetCustomerHandler(this._appDbContext, mapper, LoggerMock.Object);
+            this._customerNotFoundValidationContractHandler = new CustomerNotFoundValidationContractHandler(this._appDbContext);
         }
 
         [TestMethod, Description("Validate valid path")]
@@ -60,7 +60,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                CustomerExternalId = this._existingCustomerExternalId.ToString()
+                ExternalId = this._existingCustomerExternalId.ToString()
             };
             // Act
             var result = await this._getCustomerHandler.Handle(request, CancellationToken.None);
@@ -75,7 +75,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                CustomerExternalId = "123"
+                ExternalId = "123"
             };
             // Act
             var result = this._getCustomerHandler.Handle(request, CancellationToken.None);
@@ -90,7 +90,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                CustomerExternalId = "123"
+                ExternalId = "123"
             };
             // Act
             var result = await this._customerNotFoundValidationContractHandler.Handle(request, CancellationToken.None);
@@ -105,7 +105,7 @@ namespace WebApiPractice.Api.Tests.CustomerTests
             // Arrange 
             var request = new GetCustomerRequest()
             {
-                CustomerExternalId = Guid.NewGuid().ToString()
+                ExternalId = Guid.NewGuid().ToString()
             };
             // Act
             var result = this._customerNotFoundValidationContractHandler.Handle(request, CancellationToken.None);

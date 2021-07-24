@@ -70,15 +70,15 @@ namespace WebApiPractice.Api.Middlewares
                     });
                 await context.Response.WriteAsync(response);
             }
-            catch (ResourceConflictException ex)
+            catch (ResourcePreconditionFailedException ex)
             {
-                context.Response.StatusCode = 409;
+                context.Response.StatusCode = 412;
                 context.Response.ContentType = "application/json";
                 var response = JsonConvert.SerializeObject(
                     new
                     {
-                        errorCode = ErrorCode.ResourceConflict.Code,
-                        message = ex.Message
+                        errorCode = ErrorCode.ResourcePreconditionFailure.Code,
+                        message = $"{ErrorCode.ResourcePreconditionFailure.Message}. {ex.Message}"
                     });
                 await context.Response.WriteAsync(response);
             }
